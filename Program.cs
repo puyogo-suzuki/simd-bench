@@ -181,22 +181,18 @@ namespace SimdMatrixProduct
             fixed (float* b = B) fixed (float* b2 = B2)
             {
                 int nn = N * Vector256<float>.Count;
+                Vector256<int> stride = Avx2.LoadVector256(ptrDelta);
                 for (int i = 0, ii = 0; i < N; ++i, ii += N)
                 {
-                    IntPtr p = (IntPtr)(&b[i]);
-                    int j = 0, jj = 0;
-                    for (; j < n; j += Vector256<float>.Count, jj += nn)
+                    float * p = &b[i];
+                    int j = 0;
+                    for (; j < n; j += Vector256<float>.Count)
                     {
                         //p = (IntPtr)(&b[jj + i]);
-                        float* ptr = (float*)(p & unchecked((IntPtr)0xfffffffe00000000));
-                        int lowptr = (int)(((long)p >> 2) & 0x7fffffff);
-                        Vector256<int> vb_ptr_lower = Avx2.Add(Avx2.LoadVector256(ptrDelta), Avx2.BroadcastScalarToVector256(&lowptr));
-                        Vector256<float> vb = Avx2.GatherVector256(ptr, vb_ptr_lower, 4);
-
-                        Avx.Store(&b2[ii + j], vb);
-                        p = p + ((IntPtr)(sizeof(float)) * nn);
+                        Avx.Store(&b2[ii + j], Avx2.GatherVector256(p, stride, 4));
+                        p = (float *)((IntPtr)p + (sizeof(float) * nn));
                     }
-                    for (; j < N; ++j, jj += N)
+                    for (int jj = j * N; j < N; ++j, jj += N)
                         b2[ii + j] = b[jj + i];
                 }
             }
@@ -252,22 +248,18 @@ namespace SimdMatrixProduct
             fixed (float* b = B) fixed (float* b2 = B2)
             {
                 int nn = N * Vector256<float>.Count;
+                Vector256<int> stride = Avx2.LoadVector256(ptrDelta);
                 for (int i = 0, ii = 0; i < N; ++i, ii += N)
                 {
-                    IntPtr p = (IntPtr)(&b[i]);
-                    int j = 0, jj = 0;
-                    for (; j < n; j += Vector256<float>.Count, jj += nn)
+                    float* p = &b[i];
+                    int j = 0;
+                    for (; j < n; j += Vector256<float>.Count)
                     {
                         //p = (IntPtr)(&b[jj + i]);
-                        float* ptr = (float*)(p & unchecked((IntPtr)0xfffffffe00000000));
-                        int lowptr = (int)(((long)p >> 2) & 0x7fffffff);
-                        Vector256<int> vb_ptr_lower = Avx2.Add(Avx2.LoadVector256(ptrDelta), Avx2.BroadcastScalarToVector256(&lowptr));
-                        Vector256<float> vb = Avx2.GatherVector256(ptr, vb_ptr_lower, 4);
-
-                        Avx.Store(&b2[ii + j], vb);
-                        p = p + ((IntPtr)(sizeof(float)) * nn);
+                        Avx.Store(&b2[ii + j], Avx2.GatherVector256(p, stride, 4));
+                        p = (float*)((IntPtr)p + (sizeof(float) * nn));
                     }
-                    for (; j < N; ++j, jj += N)
+                    for (int jj = j * N; j < N; ++j, jj += N)
                         b2[ii + j] = b[jj + i];
                 }
             }
@@ -325,22 +317,18 @@ namespace SimdMatrixProduct
             fixed (float* b = B) fixed (float* b2 = B2)
             {
                 int nn = N * Vector256<float>.Count;
+                Vector256<int> stride = Avx2.LoadVector256(ptrDelta);
                 for (int i = 0, ii = 0; i < N; ++i, ii += N)
                 {
-                    IntPtr p = (IntPtr)(&b[i]);
-                    int j = 0, jj = 0;
-                    for (; j < n; j += Vector256<float>.Count, jj += nn)
+                    float* p = &b[i];
+                    int j = 0;
+                    for (; j < n; j += Vector256<float>.Count)
                     {
                         //p = (IntPtr)(&b[jj + i]);
-                        float* ptr = (float*)(p & unchecked((IntPtr)0xfffffffe00000000));
-                        int lowptr = (int)(((long)p >> 2) & 0x7fffffff);
-                        Vector256<int> vb_ptr_lower = Avx2.Add(Avx2.LoadVector256(ptrDelta), Avx2.BroadcastScalarToVector256(&lowptr));
-                        Vector256<float> vb = Avx2.GatherVector256(ptr, vb_ptr_lower, 4);
-
-                        Avx.Store(&b2[ii + j], vb);
-                        p = p + ((IntPtr)(sizeof(float)) * nn);
+                        Avx.Store(&b2[ii + j], Avx2.GatherVector256(p, stride, 4));
+                        p = (float*)((IntPtr)p + (sizeof(float) * nn));
                     }
-                    for (; j < N; ++j, jj += N)
+                    for (int jj = j * N; j < N; ++j, jj += N)
                         b2[ii + j] = b[jj + i];
                 }
             }
